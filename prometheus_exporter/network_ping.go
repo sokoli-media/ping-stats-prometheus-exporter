@@ -53,11 +53,10 @@ func pingAndReport(logger *slog.Logger, remoteAddress string) {
 func CollectPingStats(logger *slog.Logger, remoteAddresses []string) {
 	ticker := time.NewTicker(15 * time.Second)
 	for {
-		select {
-		case <-ticker.C:
-			for _, address := range remoteAddresses {
-				pingAndReport(logger, address)
-			}
+		<-ticker.C
+
+		for _, address := range remoteAddresses {
+			go pingAndReport(logger, address)
 		}
 	}
 }
